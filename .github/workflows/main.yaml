@@ -2,30 +2,30 @@ name: vprofile actions
 on: workflow_dispatch
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: vprofileaction
+  ECR_REPOSITORY: vprofileapp
   EKS_CLUSTER: vprofile-eks
-
 
 jobs:
   Testing:
     runs-on: ubuntu-latest
     steps:
-      - name: Code Checkout
+      - name: Code checkout
         uses: actions/checkout@v4
 
-      - name: Maven Test 
-        uses: mvn test 
+      - name: Maven test
+        run: mvn test
 
       - name: Checkstyle
-        uses: mvn checkstyle:checkstyle
+        run: mvn checkstyle:checkstyle
 
+      # Setup java 11 to be default (sonar-scanner requirement as of 5.x)
       - name: Set Java 11
         uses: actions/setup-java@v3
         with:
-          distribution: 'termurin'
-          java-version: '11'
-     
-     
+         distribution: 'temurin' # See 'Supported distributions' for available options
+         java-version: '11'
+
+      # Setup sonar-scanner
       - name: Setup SonarQube
         uses: warchant/setup-sonar-scanner@v7
 
